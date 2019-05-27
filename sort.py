@@ -214,7 +214,7 @@ def MergeSort(arr1):
 def MergePass(arr1, n, h): # n是元素个数，最后一个元素下标n-1, h是每次归并子序列的个数
     arr2 = []
     i = 0
-    while(i <= n-2*h): # 剩下元素 大于2h个
+    while(i < n-2*h): # 剩下元素 大于2h个
         arr2 += Merge(arr1, i, i+h-1, i+2*h-1)
         i += 2*h
     if i < n-h: # 剩下的元素 大于h小于2h个
