@@ -1,6 +1,11 @@
 '''
+----------------------------------------数组------------------------------------------------
+'''
+
+'''
 面试题3：数组中重复的数字
-在一个长度为 n 的数组中所有数字都在 0~n-1 范围内，找出数组中任意一个重复的数字
+题目一：找出数组中重复的数组。
+在一个长度为 n 的数组中所有数字都在 0~n-1 范围内，找出数组中任意一个重复的数字。
 '''
 def duplicate(nums):
     if len(nums) == 0 :
@@ -21,7 +26,6 @@ def duplicate(nums):
                 nums[temp] = temp 
     return False
 
-
 # print(duplicate([]) == False)
 # print(duplicate([1,2,0,0,5]) == False)
 # print(duplicate([1,-1,0,0,5]) == False)
@@ -30,8 +34,8 @@ def duplicate(nums):
 
 
 '''
-在一个长度为 n+1 的数组里所有数字都在 1~n 的范围内，
-不修改输入的数组，找出数组中任意一个重复的数字
+题目二：不修改数组找出重复的数字。
+在一个长度为 n+1 的数组里所有数字都在 1~n 的范围内，不修改输入的数组，找出数组中任意一个重复的数字。
 '''
 def getDuplication(nums):
     if len(nums) == 0:
@@ -70,10 +74,12 @@ def countRange(nums, length, start, end):
 
 # print(getDuplication([2,3,5,4,6,2,6,7]) == 6)
 
+
+
+
 '''
 面试题4：二维数组中的查找
-在一个二维数组中，每一行从左到右递增，每一列从上到下递增。请完成一个
-函数，输入这样的二维数组和一个整数，判断数组中是否含有该整数
+题目：在一个二维数组中，每一行从左到右递增，每一列从上到下递增。请完成一个函数，输入这样的二维数组和一个整数，判断数组中是否含有该整数。
 '''
 import numpy as np
 def Find(mat, rows, cols, num):
@@ -108,8 +114,7 @@ mat = [[1,2,8,9],
 
 '''
 面试题5：替换空格
-实现一个函数，把字符串中的每个空格替换成 "%20"。如输入 "We are happy."
-则输出 "We%20are%20happy."
+题目：实现一个函数，把字符串中的每个空格替换成 "%20"。如输入 "We are happy."，则输出 "We%20are%20happy."
 '''
 def replaceBank(string):
     string = list(string)
@@ -143,6 +148,7 @@ def replaceBank(string):
 # print(replaceBank("abc") == "abc")
 # print(replaceBank("") == False)
 
+
 '''
 -------------------------------------链表-----------------------------------------------
 '''
@@ -150,6 +156,12 @@ class ListNode:
     def __init__(self, value):
         self.value = value 
         self.next = None
+
+def printLink(link):
+    temp = link 
+    while temp is not None:
+        print(temp.value)
+        temp = temp.next
 
 def addToTail(head, value):
     '''
@@ -165,22 +177,6 @@ def addToTail(head, value):
             temp = temp.next 
         temp.next = new 
     return head
-
-def printLink(link):
-    temp = link 
-    while temp is not None:
-        print(temp.value)
-        temp = temp.next
-
-# link1 = addToTail(None, 100)
-# print(link1.value)
-# print(link1.next)
-# link1 = addToTail(link1, 50)
-# link1 = addToTail(link1, 25)
-# link1 = addToTail(link1, 12.5)
-# link1 = addToTail(link1, 6.25)
-# print("Add to tail:")
-# printLink(link1)
 
 def removeNode(head, value):
     '''
@@ -203,7 +199,17 @@ def removeNode(head, value):
                 return False # 没有该值
     deleted.next = None
     return head, deleted.value 
-                
+
+# link1 = addToTail(None, 100)
+# print(link1.value)
+# print(link1.next)
+# link1 = addToTail(link1, 50)
+# link1 = addToTail(link1, 25)
+# link1 = addToTail(link1, 12.5)
+# link1 = addToTail(link1, 6.25)
+# print("Add to tail:")
+# printLink(link1)
+
 # print(removeNode(None, 100))
 # print(removeNode(link1, 0))
 # link1, _= removeNode(link1, 100)
@@ -215,7 +221,7 @@ def removeNode(head, value):
 
 '''
 面试题6：从尾到头打印链表
-输入一个链表的头节点，从尾到头反过来打印出每个节点的值。
+题目：输入一个链表的头节点，从尾到头反过来打印出每个节点的值。
 链表节点定义如下：
 class ListNode:
     def __init__(self, value):
@@ -242,11 +248,10 @@ def printLinkReverssingly(head):
 '''
 ----------------------------------------树------------------------------------------------
 '''
+
 '''
 面试题7：重建二叉树
-输入某二叉树的前序遍历和中序遍历结果，重建该二叉树，假设输入的前序遍历和中序遍历的结果
-中都不包含重复的数字。如：输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，
-重建二叉树并输出它的头节点。二叉树节点定义如下：
+题目：输入某二叉树的前序遍历和中序遍历结果，重建该二叉树，假设输入的前序遍历和中序遍历的结果中都不包含重复的数字。如：输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，重建二叉树并输出它的头节点。二叉树节点定义如下：
 '''
 class BinaryTreeNode:
     def __init__(self, value):
@@ -290,10 +295,10 @@ def ConstructCore(preorder, inorder, length):
 # tree3 = Construct([], [])
 # tree4 = Construct([1,2,4,7,3,5,6,8], [4,7,2,0,5,3,8,6]) # raise error
 
+
 '''
 面试题8：二叉树的下一个节点
-给定一棵二叉树和其中的一个节点，如何找出中序遍历序列的下一个节点？树中的节点
-除了有两个分别指向左、右子节点的指针，还有一个指向父节点的指针.
+题目：给定一棵二叉树和其中的一个节点，如何找出中序遍历序列的下一个节点？树中的节点除了有两个分别指向左、右子节点的指针，还有一个指向父节点的指针。
 '''
 class TreeNode:
     def __init__(self, value):
@@ -344,17 +349,48 @@ def GetNext(pnode):
 # print(GetNext(e).value) #节点没有右子树，且是父节点的右子节点
 # print(GetNext(g)== None) #节点没有右子树，且是父节点的右子节点
 
+
+
+'''
+面试题9：用两个栈实现队列
+题目：用两个栈实现队列。实现队列的另两个函数appendTail和deleteHead，分别完成在队列尾部插入节点和在队列头部删除节点的功能。
+'''
+def appendTail(stack1, stack2, value):
+    stack1.append(value)
+
+def deleteHead(stack1, stack2):
+    if stack1 == [] and stack2 == []:
+        raise RuntimeError('empty queue')
+
+    if stack2 == 0:
+        while len(stack1) > 0:
+            stack2.append(stack1.pop())
+
+    delete = stack2.pop()
+    print(delete)
+    return delete
     
+# stack1, stack2 = [], []
+# for i in range(5):
+#     appendTail(stack1, stack2, i)
+# print("stack1: ", stack1, "stack2: ", stack2)
+# deleteHead(stack1, stack2)
+# deleteHead(stack1, stack2)
+# deleteHead(stack1, stack2)
+# appendTail(stack1, stack2, 5)
+# deleteHead(stack1, stack2)
+# deleteHead(stack1, stack2)
+# deleteHead(stack1, stack2)
+# deleteHead(stack1, stack2)
+
 
 '''
 面试题10：斐波那契数列
 题目一：求斐波那契数列的第n项。
-写一个函数，输入n，求斐波那契（Fibonacci）数列的第n项。数列定义如下：
-f(0)=0, f(1)=1, f(n)=f(n-1) + f(n-2)
+写一个函数，输入n，求斐波那契（Fibonacci）数列的第n项。数列定义如下：f(0)=0, f(1)=1, f(n)=f(n-1) + f(n-2)
 
 题目二：青蛙跳台阶问题。
-一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶。求该青蛙跳上一个n级台阶总共
-有多少种跳法。
+一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶。求该青蛙跳上一个n级台阶总共有多少种跳法。
 '''
 def Fib(n):
     if n == 0:
@@ -369,6 +405,49 @@ def Fib(n):
         one = fibn 
     return fibn
 
-
 # for i in range(0, 12):
 #     print(Fib(i))
+
+
+'''
+
+面试题11：旋转数组的最小数字
+题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如数组[3,4,5,1,2]为[1,2,3,4,5]的一个旋转，该数组的最小值为1。
+'''
+def Rotate(arr):
+    if arr == []:
+        return None
+    start = 0
+    end = len(arr) - 1
+    mid = start # important
+    while arr[start] >= arr[end]:
+        if end - start == 1:
+            mid = end 
+            break
+
+        mid = (start + end) // 2
+        # important
+        if arr[start] == arr[mid] and arr[end] == arr[mid]:
+            return RotateInOrder(arr, start, end)
+        
+        if arr[mid] >= arr[start]:
+            start = mid
+        if arr[mid] <= arr[end]:
+            end = mid
+    
+    return arr[mid]
+
+def RotateInOrder(arr, start, end):
+    min = arr[start]
+    for i in range(start, end+1):
+        if arr[i] < min:
+            min = arr[i]
+    return min
+
+# print(Rotate([3,4,5,1,2]))
+# print(Rotate([3,4,4,1,1,2]))
+# print(Rotate([1,2,3,4,5]))
+# print(Rotate([1,0,1,1,1]))
+# print(Rotate([1]))
+# print(Rotate([]))
+        
