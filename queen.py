@@ -23,8 +23,9 @@ def queen_core(arr, res, cur=0):
             if arr[col] == row or abs(arr[col] - row) == cur - col:
                 flag = False
                 break
+            
         if flag:
             queen_core(arr, res , cur+1)
 
-a = queen([None] * 4)
+a = queen([None] * 8)
 print(a)

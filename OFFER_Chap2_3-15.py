@@ -465,33 +465,29 @@ def hasPath(arr, rows, cols, str):
         return None
     
     visited = [0] * (rows * cols)
-    pathLength = 0
     for row in range(0, rows):
         for col in range(0, cols):
-            if find(arr, rows, cols, row, col, str, pathLength, visited):
+            if find(arr, rows, cols, row, col, str, visited):
                 return True
     
     return False
 
-def find(arr, rows, cols, row, col, str, pathLength, visited):
-    if pathLength == len(str):
+def find(arr, rows, cols, row, col, str, visited):
+    if str == '':
         return True
     
     flag = False
     if (row >= 0 and row < rows and 
         col >= 0 and col < cols and 
-        arr[row*cols + col] == str[pathLength] and 
+        arr[row*cols + col] == str[0] and 
         visited[row*cols + col] == 0):
 
-        pathLength += 1
         visited[row*cols + col] = 1
-        flag = find(arr, rows, cols, row, col-1, str, pathLength, visited) or \
-                  find(arr, rows, cols, row, col+1, str, pathLength, visited) or \
-                  find(arr, rows, cols, row-1, col, str, pathLength, visited) or \
-                  find(arr, rows, cols, row+1, col, str, pathLength, visited)
-        if not flag:
-            pathLength -= 1
-            visited[row * cols + col] = 0
+
+        flag = find(arr, rows, cols, row, col-1, str[1:], visited) or \
+                  find(arr, rows, cols, row, col+1, str[1:], visited) or \
+                  find(arr, rows, cols, row-1, col, str[1:], visited) or \
+                  find(arr, rows, cols, row+1, col, str[1:], visited)
     
     return flag 
 
@@ -502,4 +498,7 @@ print(hasPath(arr, 3, 4, 'abfd'))
 print(hasPath(arr, 3, 4, 'bfce'))
 print(hasPath(arr, 3, 4, 'abfb'))
 print(hasPath([], 0, 0, ''))
-    
+arr = ['a', 'a', 'a']
+print(hasPath(arr, 3, 1, 'aaa'))
+print(hasPath(arr, 3, 1, 'a'))
+print(hasPath(arr, 3, 1, 'aaaa'))

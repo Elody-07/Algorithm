@@ -27,7 +27,6 @@ def InsertSort(arr):
 # print(InsertSort(arr4))
 # print(InsertSort(arr5))
 
-#############################################################
 
 def BubbleSort(arr):
     '''
@@ -74,63 +73,46 @@ def BetterBubbleSort(arr):
 # print(BetterBubbleSort(arr4))
 # print(BetterBubbleSort(arr5))
                             
-#############################################################
 
 import random
-def QuickSort(arr, start, end):
-    if start == end:
-        return 
-    index = Partition2(arr, start, end)
-    if start < index:
-        QuickSort(arr, start, index - 1)
-    if end > index:
-        QuickSort(arr, index+1, end)
-    return arr
+def Partition(arr):
+    start = 0
+    end = len(arr) - 1
+    center_idx = random.randint(start, end)
 
-def Partition(arr, start, end):
-    # center_idx = random.randint(start, end)
-    # center = arr[center_idx]
-    # arr[center_idx] = arr[start]
-    # arr[start] = center 
-    center = arr[start]
+    center = arr[center_idx] # 将轴值放在数组第一个
+    arr[center_idx] = arr[start]
+    arr[start] = center 
 
-    while start < end:
-        while arr[end] >= center and start < end:
+    while(start < end):
+        while arr[end] >= center:
             end -= 1
         arr[start] = arr[end]
-        while arr[start] <= center and start < end:
+        while arr[start] <= center:
             start += 1
         arr[end] = arr[start]
-    assert start == end 
-    arr[start] = center
+    assert start==end 
+    arr[start] = arr[0]
     return start
 
-def Partition2(arr, start, end):
+def QuickSort(arr):
     '''
-    优选
+    快速排序
     '''
-    small = start - 1
-    for i in range(start, end):
-        if arr[i] < arr[end]:
-            small += 1
-            if small != i:
-                temp = arr[small]
-                arr[small] = arr[i]
-                arr[i] = temp
-    small += 1
-    temp = arr[end]
-    arr[end] = arr[small]
-    arr[small] = temp 
+    if len(arr) == 0:
+        return False
+    if len(arr) == 1:
+        return arr
+    middle = Partition(arr)
+    QuickSort(arr[0 : middle])
+    QuickSort(arr[middle + 1 :])
 
-    return small
+# print(BetterBubbleSort(arr1))
+# print(BetterBubbleSort(arr2))
+# print(BetterBubbleSort(arr3))
+# print(BetterBubbleSort(arr4))
+# print(BetterBubbleSort(arr5))
 
-print(QuickSort(arr1, 0, 0))
-print(QuickSort(arr2, 0, len(arr2) - 1))
-print(QuickSort(arr3, 0, len(arr3) - 1))
-print(QuickSort(arr4, 0, len(arr4) - 1))
-print(QuickSort(arr5, 0, len(arr5) - 1))
-
-#############################################################
 
 def SelectSort(arr):
     '''
@@ -155,21 +137,6 @@ def SelectSort(arr):
 # print(SelectSort(arr4))
 # print(SelectSort(arr5))
 
-#############################################################
-
-def HeapSort(arr):
-    '''
-    堆排序
-    '''
-    n = len(arr) - 1
-    for i in range(n//2, 0, -1):
-        Sift(arr, i, n)
-    for i in range(n, 1, -1):
-        temp = arr[1]
-        arr[1] = arr[i]
-        arr[i] = temp
-        Sift(arr, 1, i-1)
-    return arr
 
 def Sift(arr, i, n):
     j = 2 * i
@@ -186,6 +153,21 @@ def Sift(arr, i, n):
             j = 2 * i
     return arr 
 
+def HeapSort(arr):
+    '''
+    堆排序
+    '''
+    n = len(arr) - 1
+    for i in range(n//2, 0, -1):
+        Sift(arr, i, n)
+    for i in range(n, 1, -1):
+        temp = arr[1]
+        arr[1] = arr[i]
+        arr[i] = temp
+        Sift(arr, 1, i-1)
+    return arr
+
+
 h1 = [-1]
 h2 = [-1, 4,2,5,1,8,2,8]
 h3 = [-1, 1,5,3,2,6,4,7]
@@ -198,32 +180,6 @@ h5 = [-1, 7,6,5,4,3,2,1]
 # print(HeapSort(h5))
 
 
-#############################################################
-def MergeSort(arr1):
-    '''
-    二路归并排序
-    '''
-    n = len(arr1)
-    h = 1
-    while(h < n):
-        arr1 = MergePass(arr1, n, h)
-        h = 2 * h
-    return arr1
-
-# 一趟排序
-def MergePass(arr1, n, h): # n是元素个数，最后一个元素下标n-1, h是每次归并子序列的个数
-    arr2 = []
-    i = 0
-    while(i < n-2*h): # 剩下元素 大于2h个
-        arr2 += Merge(arr1, i, i+h-1, i+2*h-1)
-        i += 2*h
-    if i < n-h: # 剩下的元素 大于h小于2h个
-        arr2 += Merge(arr1, i, i+h-1, n-1)
-    if i >= n-h: # 剩下的元素 小于等于h个
-        while i <= n-1:
-            arr2.append(arr1[i])
-            i += 1
-    return arr2
 
 # 归并两个相邻序列 arr1[s]~arr1[m], arr1[m+1]~arr1[t] 
 def Merge(arr1, s, m, t):
@@ -245,6 +201,32 @@ def Merge(arr1, s, m, t):
         j += 1
     return arr2
 
+# 一趟排序
+def MergePass(arr1, n, h): # n是元素个数，最后一个元素下标n-1, h是每次归并子序列的个数
+    arr2 = []
+    i = 0
+    while(i < n-2*h): # 剩下元素 大于2h个
+        arr2 += Merge(arr1, i, i+h-1, i+2*h-1)
+        i += 2*h
+    if i < n-h: # 剩下的元素 大于h小于2h个
+        arr2 += Merge(arr1, i, i+h-1, n-1)
+    if i >= n-h: # 剩下的元素 小于等于h个
+        while i <= n-1:
+            arr2.append(arr1[i])
+            i += 1
+    return arr2
+
+def MergeSort(arr1):
+    '''
+    二路归并排序
+    '''
+    n = len(arr1)
+    h = 1
+    while(h < n):
+        arr1 = MergePass(arr1, n, h)
+        h = 2 * h
+    return arr1
+
 # print(MergeSort(arr1))
 # print(MergeSort(arr2))
 # print(MergeSort(arr3))
@@ -253,7 +235,5 @@ def Merge(arr1, s, m, t):
 
         
 
-
-    
 
     
