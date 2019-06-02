@@ -410,7 +410,6 @@ def Fib(n):
 
 
 '''
-
 面试题11：旋转数组的最小数字
 题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如数组[3,4,5,1,2]为[1,2,3,4,5]的一个旋转，该数组的最小值为1。
 '''
@@ -451,3 +450,56 @@ def RotateInOrder(arr, start, end):
 # print(Rotate([1]))
 # print(Rotate([]))
         
+
+
+
+'''
+面试题12：矩阵中的路径
+题目：请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一格开始，每一步可以在矩阵中向左、右、上、下移动一格。如果一条路径经过了矩阵的某一格，那么该路径不能再次进入该格子。例如在下面的3×4矩阵中包含一条字符串"bfce"的路径，但不包含"abfb"的路径，因为路径不能第二次进入字符b这个格子。
+a  b  t  g
+c  f  c  s
+j  d  e  h
+'''
+def hasPath(arr, rows, cols, str):
+    if arr == [] or rows < 1 or cols < 1 or str == '':
+        return None
+    
+    visited = [0] * (rows * cols)
+    pathLength = 0
+    for row in range(0, rows):
+        for col in range(0, cols):
+            if find(arr, rows, cols, row, col, str, pathLength, visited):
+                return True
+    
+    return False
+
+def find(arr, rows, cols, row, col, str, pathLength, visited):
+    if pathLength == len(str):
+        return True
+    
+    flag = False
+    if (row >= 0 and row < rows and 
+        col >= 0 and col < cols and 
+        arr[row*cols + col] == str[pathLength] and 
+        visited[row*cols + col] == 0):
+
+        pathLength += 1
+        visited[row*cols + col] = 1
+        flag = find(arr, rows, cols, row, col-1, str, pathLength, visited) or \
+                  find(arr, rows, cols, row, col+1, str, pathLength, visited) or \
+                  find(arr, rows, cols, row-1, col, str, pathLength, visited) or \
+                  find(arr, rows, cols, row+1, col, str, pathLength, visited)
+        if not flag:
+            pathLength -= 1
+            visited[row * cols + col] = 0
+    
+    return flag 
+
+arr = ['a', 'b', 't', 'g',
+       'c', 'f', 'c', 's',
+       'j', 'd', 'e', 'h']
+print(hasPath(arr, 3, 4, 'abfd'))
+print(hasPath(arr, 3, 4, 'bfce'))
+print(hasPath(arr, 3, 4, 'abfb'))
+print(hasPath([], 0, 0, ''))
+    
