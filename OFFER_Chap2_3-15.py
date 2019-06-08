@@ -491,14 +491,104 @@ def find(arr, rows, cols, row, col, str, visited):
     
     return flag 
 
-arr = ['a', 'b', 't', 'g',
-       'c', 'f', 'c', 's',
-       'j', 'd', 'e', 'h']
-print(hasPath(arr, 3, 4, 'abfd'))
-print(hasPath(arr, 3, 4, 'bfce'))
-print(hasPath(arr, 3, 4, 'abfb'))
-print(hasPath([], 0, 0, ''))
-arr = ['a', 'a', 'a']
-print(hasPath(arr, 3, 1, 'aaa'))
-print(hasPath(arr, 3, 1, 'a'))
-print(hasPath(arr, 3, 1, 'aaaa'))
+# arr = ['a', 'b', 't', 'g',
+#        'c', 'f', 'c', 's',
+#        'j', 'd', 'e', 'h']
+# print(hasPath(arr, 3, 4, 'abfd'))
+# print(hasPath(arr, 3, 4, 'bfce'))
+# print(hasPath(arr, 3, 4, 'abfb'))
+# print(hasPath([], 0, 0, ''))
+# arr = ['a', 'a', 'a']
+# print(hasPath(arr, 3, 1, 'aaa'))
+# print(hasPath(arr, 3, 1, 'a'))
+# print(hasPath(arr, 3, 1, 'aaaa'))
+
+
+
+'''
+面试题13：机器人的运动范围
+题目：地上有一个m行n列的方格。一个机器人从坐标（0,0）的格子开始移动，它每次可以向左、右、上、下移动一格，但不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7=18。但不能进入（35,38）。请问该机器人能够到达多少个格子。
+'''
+def movingCount(thresh, rows, cols):
+    if thresh < 0 or rows <= 0 or cols <= 0:
+        return 0
+
+    visited = [0] * rows * cols 
+    count = movingCountCore(thresh, rows, cols, 0, 0, visited)
+    return count
+
+def movingCountCore(thresh, rows, cols, row, col, visited):
+    count = 0
+    if (row >= 0 and row < rows and \
+       col >= 0 and col < cols and \
+       getSum(row) + getSum(col) <= thresh and \
+       visited[row * cols + col] == 0):
+       
+       visited[row * cols + col] = 1
+       count = 1 + movingCountCore(thresh, rows, cols, row+1, col, visited) + movingCountCore(thresh, rows, cols, row-1, col, visited) + movingCountCore(thresh, rows, cols, row, col+1, visited) + movingCountCore(thresh, rows, cols, row, col-1, visited)
+    #    count = 1 + max(movingCountCore(thresh, rows, cols, row+1, col, visited) , movingCountCore(thresh, rows, cols, row-1, col, visited) , movingCountCore(thresh, rows, cols, row, col+1, visited) , movingCountCore(thresh, rows, cols, row, col-1, visited))
+    return count
+
+def getSum(num):
+    sum = 0
+    while(num >= 1):
+        sum += int(num % 10)
+        num = int(num / 10)
+    return sum
+
+# print(movingCount(-1, 5, 5))
+# print(movingCount(0, 5, 5))
+# print(movingCount(0, 1, 1))
+# print(movingCount(4, 7, 5))
+# print(movingCount(10, 1, 100))
+       
+
+
+'''
+面试题14：剪绳子
+题目：给你一根长度为n的绳子，请把绳子剪成m段（m、n都是整数，并且m > 1, n > 1），每段绳子的长度记为k[0],k[1],...,k[m-1]。请问k[0]×k[1]×...×k[m-1]可能的最大乘积是多少？例如，当绳子的长度为8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+'''
+def maxProductAfterCutting1(length):
+    if length < 2:
+        return 0
+    if length == 2:
+        return 1
+    if length == 3:
+        return 2
+
+    products = [0] * (length + 1)
+    products[0] = 0
+    products[1] = 1
+    products[2] = 2
+    products[3] = 3
+    
+    for i in range(4, length+1):
+        for j in range(1, int(i/2 + 1)):
+            product = products[j] * products[i-j]
+            if products[i] < product:
+                products[i] = product 
+    
+    return products[length]
+
+def maxProductAfterCutting2(length):
+    if length < 2:
+        return 0
+    if length == 2:
+        return 1
+    if length == 3:
+        return 2
+    
+    timesOf3 = int(length / 3)
+    
+    if (length - timesOf3 * 3) == 1:
+        timesOf3 -= 1
+    
+    timesOf2 = int((length - timesOf3 * 3) / 2)
+
+    return (2 ** timesOf2 * 3 ** timesOf3)
+    
+
+for length in range(1, 10):
+    print(maxProductAfterCutting1(length))
+    print(maxProductAfterCutting2(length))
+    print('-----')
