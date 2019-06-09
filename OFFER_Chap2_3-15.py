@@ -588,7 +588,47 @@ def maxProductAfterCutting2(length):
     return (2 ** timesOf2 * 3 ** timesOf3)
     
 
-for length in range(1, 10):
-    print(maxProductAfterCutting1(length))
-    print(maxProductAfterCutting2(length))
-    print('-----')
+# for length in range(1, 10):
+#     print(maxProductAfterCutting1(length))
+#     print(maxProductAfterCutting2(length))
+#     print('-----')
+
+
+
+'''
+面试题15：二进制中1的个数
+题目：请实现一个函数，输入一个整数，输出该数二进制表示中1的个数。例如，把9表示成二进制是1001，有两位是1，因此，如果输入9，则函数输出2。
+其他题目：
+用一条语句判断一个整数是不是2的整数次方：(num-1 & num) == 0则是，否则不是；
+输入两个整数m和n，计算需要改变m的二进制表示中的多少位才能得到n。分为两步，第一步求两个数的异或，第二步统计异或结果中1的个数。
+
+'''
+# 常规解法
+# def BinaryOne(num):
+#     count = 0
+#     flag = 1
+#     while(flag):
+#         if (flag & num):
+#             count += 1
+#         flag = flag << 1
+#         print(bin(flag))
+#         print(type(flag))
+#     return count
+
+
+# 优选
+def BinaryOne(num):
+    count = 0
+    if num < 0:
+        num = num & (0xffffffff)
+    # print("num:", bin(num))
+    while (num):
+        count += 1
+        num = (num-1) & num
+    return count
+
+# print(BinaryOne(-9))
+# print(BinaryOne(0x80000009))
+# print(BinaryOne(0x80000000))
+
+# print(int(0x80000009))
