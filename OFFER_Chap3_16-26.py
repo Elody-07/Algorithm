@@ -60,3 +60,72 @@ def PowerWithUnsignedExponent(base, exponent):
 '''
 面试题17：打印从1到最大的n位数
 题目：输入数字n，按顺序打印出从1到最大的n位十进制数，比如输入3，则打印出1，2，3一直到999。
+'''
+# 两种方法：常规和递归，共用PrintNumber
+def PrintNumsContinuously_1(n):
+    if n <= 0:
+        return
+
+    num = [0] * n
+    count = 0
+    while(not Increment(num)):
+        PrintNumber(num)
+        count += 1
+    print(count)
+
+# num+1, 并判断是否溢出（即最高位由9->10）
+def Increment(num):
+    length = len(num)
+    nTakeOver = 0
+    for i in range(length-1, -1, -1):
+        nSum = num[i] + nTakeOver
+        if i == length - 1:
+            nSum += 1
+        if nSum >= 10:
+            if i == 0:
+                return True
+            else:
+                nTakeOver = 1
+                nSum -= 10
+        else:
+            nTakeOver = 0
+        num[i] = nSum
+    return False
+
+# 打印num数组代表的数字，不打印高位无意义的0
+def PrintNumber(num):
+    isBeginning0 = True
+    for i in range(0, len(num)):
+        if isBeginning0 and num[i] != 0:
+            isBeginning0 = False
+        
+        if not isBeginning0:
+            print('%d' % num[i], end='')
+    
+    if not isBeginning0: # 防止递归方法中多打印一行空行
+        print('')
+
+
+# 递归
+def PrintNumsContinuously_2(n):
+    if n <= 0:
+        return 
+    num = [0] * n
+    for i in range(0, 10):
+        num[0] = i
+        PrintNumsCore(num, 0)
+
+def PrintNumsCore(num, index):
+    if index == len(num)-1:
+        PrintNumber(num)
+        return
+
+    for i in range(10):
+        num[index+1] = i
+        PrintNumsCore(num, index+1)
+
+# PrintNumsContinuously_2(0)
+# PrintNumsContinuously_2(-1)
+PrintNumsContinuously_2(2)
+
+
