@@ -126,6 +126,58 @@ def PrintNumsCore(num, index):
 
 # PrintNumsContinuously_2(0)
 # PrintNumsContinuously_2(-1)
-PrintNumsContinuously_2(2)
+# PrintNumsContinuously_2(2)
+
+
+'''
+面试题18：删除链表的节点
+题目一：在O(1)的时间内删除链表节点。
+给定单向链表的头指针和一个节点指针，定义一个函数在O(1)时间内删除该节点。链表节点与函数的定义如下：
+'''
+class LinkNode(object):
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+def DeleteNode(pHead, pToBeDeleted):
+    '''
+    定义一个空节点：value和next均为None
+    '''
+    if (pHead.value is None and pHead.next is None) or (pToBeDeleted.value is None and pToBeDeleted.next is None):
+        raise RuntimeError("Invalid Input.")
+    if pToBeDeleted.next is None: # 被删除的节点是尾节点
+        if pHead is pToBeDeleted:
+            delete = pToBeDeleted.value
+            pHead.value = None
+            return delete
+
+        pTemp = pHead
+        while pTemp.next is not None and pTemp.next is not pToBeDeleted:
+            pTemp = pTemp.next
+        if pTemp.next is pToBeDeleted:
+            pTemp.next = None
+            return pToBeDeleted.value
+        else:
+            return False
+    else:
+        delete = pToBeDeleted.value
+        pTemp = pToBeDeleted.next
+        pToBeDeleted.value = pTemp.value
+        pToBeDeleted.next = pTemp.next
+        pTemp.next = None
+        return delete
+
+# a = LinkNode(1)
+# b = LinkNode(2)
+# c = LinkNode(3)
+# d = LinkNode(4)
+# a.next, b.next = b, c
+# print(DeleteNode(a, a.next))
+# print(DeleteNode(a, a.next))
+# print(DeleteNode(a, d))
+# print(DeleteNode(a, a))
+# print(DeleteNode(a, a))
+        
+
 
 
