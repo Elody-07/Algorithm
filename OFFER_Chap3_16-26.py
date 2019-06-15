@@ -140,32 +140,29 @@ class LinkNode(object):
         self.next = None
 
 def DeleteNode(pHead, pToBeDeleted):
-    '''
-    定义一个空节点：value和next均为None
-    '''
-    if (pHead.value is None and pHead.next is None) or (pToBeDeleted.value is None and pToBeDeleted.next is None):
+
+    if (pHead is None or pToBeDeleted is None):
         raise RuntimeError("Invalid Input.")
+
     if pToBeDeleted.next is None: # 被删除的节点是尾节点
         if pHead is pToBeDeleted:
             delete = pToBeDeleted.value
-            pHead.value = None
-            return delete
+            pHead = None
 
         pTemp = pHead
         while pTemp.next is not None and pTemp.next is not pToBeDeleted:
             pTemp = pTemp.next
         if pTemp.next is pToBeDeleted:
             pTemp.next = None
-            return pToBeDeleted.value
-        else:
-            return False
+        # else:
+        #     return False
     else:
-        delete = pToBeDeleted.value
         pTemp = pToBeDeleted.next
         pToBeDeleted.value = pTemp.value
         pToBeDeleted.next = pTemp.next
         pTemp.next = None
-        return delete
+
+    return pHead
 
 # a = LinkNode(1)
 # b = LinkNode(2)
@@ -179,5 +176,28 @@ def DeleteNode(pHead, pToBeDeleted):
 # print(DeleteNode(a, a))
         
 
+'''
+题目二：删除链表中重复的节点
+在一个排序的链表中，删除重复的节点。如 1 -> 2 -> 3 -> 3 -> 4 -> 4 -> 5删除重复的节点后变成1 -> 2 -> 5
+'''
+# 递归法，书上P123非递归法
+def DeleteDuplication(pHead):
+    if pHead is None or pHead.next is None:
+        return pHead
+    
+    pNext = pHead.next
+    if pNext.value != pHead.value:
+        pHead.next = DeleteDuplication(pNext) # 保留pHead
+    else:
+        while(pNext is not None and pNext.value == pHead.value):
+            pNext = pNext.next
+        # pHead.next = DeleteDuplication(pNext)  # 保留一个重复数字
+        pHead = DeleteDuplication(pNext)  # 不保留重复数字
 
+    return pHead
 
+# a, b, c, d = LinkNode(1), LinkNode(2), LinkNode(2), LinkNode(2)
+# a.next, b.next, c.next = b, c, d
+# head = DeleteDuplication(a)
+# print(head)
+    
