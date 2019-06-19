@@ -27,5 +27,25 @@ def queen_core(arr, res, cur=0):
         if flag:
             queen_core(arr, res , cur+1)
 
-a = queen([None] * 8)
-print(a)
+# a = queen([None] * 8)
+# print(a)
+
+
+
+'''
+给你六种面额 1、5、10、20、50、100 元的纸币，假设每种币值的数量都足够多，编写程序求组成N元（N为0~10000的非负整数）的不同组合的个数。
+时间复杂度O(kn)
+'''
+
+def ComposeN(a, n):
+    dp = [0] * (n+1)
+    dp[0] = 1
+    for item in a:
+        for j in range(item, n+1):
+            dp[j] = dp[j] + dp[j - item]
+    
+    return dp[n]
+
+a = [1, 5, 10, 20, 50, 100]
+for i in range(10, 20):
+    print(i, ComposeN(a, i))

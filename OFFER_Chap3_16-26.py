@@ -201,3 +201,91 @@ def DeleteDuplication(pHead):
 # head = DeleteDuplication(a)
 # print(head)
     
+
+
+'''
+面试题19：正则表达式匹配
+题目：请实现一个函数用来匹配包含'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，'*'表示它前面的字符可以出现任意次（含0次）。在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串'aaa'与模式'a.a'和'ab*ac*a'匹配，但与'aa.a'和'ab*a'均不匹配。
+'''
+def match(target, pattern):
+    if len(target) == 0 and len(pattern) == 0:
+        return True
+    if len(target) > 0 and len(pattern) == 0:
+        return False
+
+    if len(pattern) > 1 and pattern[1] == '*':
+        if len(target)>0 and (target[0]==pattern[0] or pattern[0]=='.'): 
+            return match(target, pattern[2:]) or match(target[1:], pattern[2:]) or match(target[1:], pattern)
+        else:
+            return match(target, pattern[2:])
+    
+    if len(target)>0 and (pattern[0]==target[0] or pattern[0]=='.'):
+        return match(target[1:], pattern[1:])
+    
+    return False
+
+# print(match('aaa', 'a.a'))
+# print(match('aaa', 'ab*ac*a'))
+# print(match('',''))
+# print(match('aaa', '...'))
+# print(match('', 'a*b*c*'))
+
+# print(match('aaa', 'aa.a'))
+# print(match('aaa', 'ab*a'))
+    
+
+'''
+面试题20：表示数值的字符串
+题目：请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串'+100'、'5e2'、'-123'、'3.1415'及'-1E-16'都表示数值，但'12e'、'1a3.14'、'1.2.3'、'+-5'及'12e+5.4'都不是。
+'''
+'''
+数字模式：A[.[B]][e|EC]或.B[e|EC]，其中[]表示可有可无，A和C是可带正负号的整数，B是无符号整数
+注意：e或E前必须有数字，如1e-5或1.e-5
+注意：python中数字和字符串都是值传递
+'''
+def isNumeric(string):
+    if string == '':
+        return False
+
+    # 判断是否有A部分，有则True，无则False，返回的string是去掉A部分的
+    numeric, string = isInteger(string) 
+
+    # 判断是否有B部分
+    if string != '' and string[0] == '.':
+        string = string[1:]
+        B, string = isUnsignedInteger(string)
+        numeric = B or numeric
+    
+    # 判断是否有C部分，注意e或E前必须有数字，故用and
+    if string != '' and (string[0] == 'e' or string[0] == 'E'):
+        string = string[1:]
+        C, string = isInteger(string)
+        numeric = C and numeric
+    
+    return (numeric and string == '')
+
+def isUnsignedInteger(string):
+    if string == '':
+        return False, string
+
+    n = len(string)
+    while(string != '' and string[0] >= '0' and string[0] <= '9'):
+        string = string[1:]
+    
+    return (n > len(string)), string
+
+def isInteger(string):
+    if string == '':
+        return False, string
+    
+    if string[0] == '+' or string[0] == '-':
+        string = string[1:]
+    return isUnsignedInteger(string)
+
+print(isNumeric('123'))
+print(isNumeric('123.'))
+print(isNumeric('.5'))
+print(isNumeric('123.5e-3'))
+print(isNumeric(''))
+print(isNumeric('123.5e'))
+print(isNumeric('1a.32'))
