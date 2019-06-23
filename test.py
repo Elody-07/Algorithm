@@ -1,5 +1,4 @@
-print('hello', end='')
-print('again', end='')
-
-
-print('' >= '0' and ''<='9')
+num = 3
+print(num)
+print(num & 0x1)
+print(num & 0b1)

@@ -1,3 +1,8 @@
+class LinkNode(object):
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
 '''
 面试题16：数值的整数次方
 题目：实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
@@ -134,11 +139,6 @@ def PrintNumsCore(num, index):
 题目一：在O(1)的时间内删除链表节点。
 给定单向链表的头指针和一个节点指针，定义一个函数在O(1)时间内删除该节点。链表节点与函数的定义如下：
 '''
-class LinkNode(object):
-    def __init__(self, value):
-        self.value = value
-        self.next = None
-
 def DeleteNode(pHead, pToBeDeleted):
 
     if (pHead is None or pToBeDeleted is None):
@@ -189,7 +189,8 @@ def DeleteDuplication(pHead):
     if pNext.value != pHead.value:
         pHead.next = DeleteDuplication(pNext) # 保留pHead
     else:
-        while(pNext is not None and pNext.value == pHead.value):
+        # 退出循环时pNext=None或pNext.value != pHead.value
+        while(pNext is not None and pNext.value == pHead.value): 
             pNext = pNext.next
         # pHead.next = DeleteDuplication(pNext)  # 保留一个重复数字
         pHead = DeleteDuplication(pNext)  # 不保留重复数字
@@ -282,10 +283,58 @@ def isInteger(string):
         string = string[1:]
     return isUnsignedInteger(string)
 
-print(isNumeric('123'))
-print(isNumeric('123.'))
-print(isNumeric('.5'))
-print(isNumeric('123.5e-3'))
-print(isNumeric(''))
-print(isNumeric('123.5e'))
-print(isNumeric('1a.32'))
+# print(isNumeric('123'))
+# print(isNumeric('123.'))
+# print(isNumeric('.5'))
+# print(isNumeric('123.5e-3'))
+# print(isNumeric(''))
+# print(isNumeric('123.5e'))
+# print(isNumeric('1a.32'))
+
+
+'''
+面试题21：调整数组顺序使奇数位于偶数前面
+题目：输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分
+可扩展的解法（isOdd）
+'''
+def Reorder(arr):
+    if len(arr) <= 1:
+        return arr
+
+    p1 = 0
+    p2 = len(arr) - 1
+    
+    while (p1 < p2):
+        while (p1 < p2 and isOdd(arr[p1])):
+            p1 += 1
+        while (p1 < p2 and not isOdd(arr[p2])):
+            p2 -= 1
+        
+        if p1 < p2:
+            temp = arr[p1]
+            arr[p1] = arr[p2]
+            arr[p2] = temp
+    return arr
+
+def isOdd(num):
+    return num & 0x1
+
+# 负数在非负数前面
+def isNegative(num):
+    return (num < 0)
+
+# 能被3整除的数在前面
+def isDividedBy3(num):
+    return (num % 3 == 0)
+
+# print(Reorder([1,3,5,2,4,6]))
+# print(Reorder([2,4,6,1,3,5]))
+# print(Reorder([1,3,5]))
+# print(Reorder([2,4,6]))
+# print(Reorder([]))
+
+
+'''
+面试题22：链表中倒数第k个节点
+题目：输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
+'''
