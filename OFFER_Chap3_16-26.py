@@ -338,3 +338,46 @@ def isDividedBy3(num):
 面试题22：链表中倒数第k个节点
 题目：输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
 '''
+def KthNodeToTail(pHead, k):
+    if pHead is None or k <= 0:
+        return False
+    
+    pFast = pHead
+    pSlow = pHead
+    for i in range(0, k-1):
+        if pFast.next is not None:
+            pFast = pFast.next 
+        else:
+            return False # important, in case k is larger than link length
+    
+    while(pFast.next is not None):
+        pFast = pFast.next
+        pSlow = pSlow.next
+    return pSlow.value
+
+def CenterNode(pHead):
+    if pHead is None:
+        return False
+    
+    pFast = pHead
+    pSlow = pHead
+    while(pFast.next is not None and pFast.next.next is not None):
+        pFast = pFast.next.next
+        pSlow = pSlow.next
+    return pSlow.value
+
+# one, two, three, four = LinkNode(1), LinkNode(2), LinkNode(3), LinkNode(4)
+# one.next, two.next, three.next = two, three, four
+# print(KthNodeToTail(one, 1))
+# print(KthNodeToTail(one, 2))
+# print(KthNodeToTail(one, 3))
+# print(KthNodeToTail(one, 4))
+# print(KthNodeToTail(one, 5))
+# print(KthNodeToTail(None, 5))
+
+# print(CenterNode(one))
+# print(CenterNode(two))
+# print(CenterNode(three))
+# print(CenterNode(four))
+
+
