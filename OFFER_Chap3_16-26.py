@@ -337,6 +337,7 @@ def isDividedBy3(num):
 '''
 面试题22：链表中倒数第k个节点
 题目：输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
+牛客网check
 '''
 def KthNodeToTail(pHead, k):
     if pHead is None or k <= 0:
@@ -380,4 +381,88 @@ def CenterNode(pHead):
 # print(CenterNode(three))
 # print(CenterNode(four))
 
+
+'''
+面试题23：链表中环的入口节点
+题目：如果一个链表中包含环，找出环的入口点
+牛客网check
+'''
+def EntryNodeOfLoop(pHead):
+    if pHead is None:
+        return False 
+
+    loop_n = LoopLength(pHead)
+    if not loop_n:
+        return False
+
+    pFast = pHead
+    pSlow = pHead
+    for i in range(0, loop_n):
+        pFast = pFast.next 
+    
+    while(pFast != pSlow):
+        pFast = pFast.next
+        pSlow = pSlow.next
+    return pSlow.value
+
+def LoopLength(pHead):
+    if pHead is None:
+        return None
+
+    pSlow = pHead
+    pFast = pHead.next
+    while(pFast is not None and pFast.next is not None and pFast.next.next is not None and pFast != pSlow):
+        pFast = pFast.next.next
+        pSlow = pSlow.next
+    if pFast is pSlow:
+        count = 1
+        pNext = pFast
+        while(pNext.next != pFast):
+            pNext = pNext.next
+            count += 1
+        return count
+    else:
+        return 0
+
+# one, two, three, four = LinkNode(1), LinkNode(2), LinkNode(3), LinkNode(4)
+# one.next, two.next, three.next = two, three, four
+# print(EntryNodeOfLoop(one))
+# four.next = four
+# print(EntryNodeOfLoop(one))
+# four.next = three
+# print(EntryNodeOfLoop(one))
+# four.next = one
+# print(EntryNodeOfLoop(one))
+# print(EntryNodeOfLoop(four))
+# print(EntryNodeOfLoop(None))
+
+
+
+'''
+面试题24：反转链表
+题目：定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+牛客网check
+'''
+def ReverseList(pHead):
+    if pHead is None:
+        return False 
+    
+    first = None 
+    second = pHead
+    if pHead.next is None:
+        return pHead 
+    else:
+        third = pHead.next
+    
+    while(second is not None and third is not None):
+        second.next = first
+        first, second, third = second, third, third.next
+    if second is not None:
+        second.next = first
+    return second
+
+one, two, three, four = LinkNode(1), LinkNode(2), LinkNode(3), LinkNode(4)
+one.next, two.next, three.next = two, three, four
+one_r = ReverseList(one)
+four_r = ReverseList(four)
 
