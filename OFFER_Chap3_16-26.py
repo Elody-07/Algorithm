@@ -179,6 +179,7 @@ def DeleteNode(pHead, pToBeDeleted):
 '''
 题目二：删除链表中重复的节点
 在一个排序的链表中，删除重复的节点。如 1 -> 2 -> 3 -> 3 -> 4 -> 4 -> 5删除重复的节点后变成1 -> 2 -> 5
+牛客网check
 '''
 # 递归法，书上P123非递归法
 def DeleteDuplication(pHead):
@@ -207,6 +208,7 @@ def DeleteDuplication(pHead):
 '''
 面试题19：正则表达式匹配
 题目：请实现一个函数用来匹配包含'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，'*'表示它前面的字符可以出现任意次（含0次）。在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串'aaa'与模式'a.a'和'ab*ac*a'匹配，但与'aa.a'和'ab*a'均不匹配。
+牛客网check
 '''
 def match(target, pattern):
     if len(target) == 0 and len(pattern) == 0:
@@ -243,6 +245,7 @@ def match(target, pattern):
 数字模式：A[.[B]][e|EC]或.B[e|EC]，其中[]表示可有可无，A和C是可带正负号的整数，B是无符号整数
 注意：e或E前必须有数字，如1e-5或1.e-5
 注意：python中数字和字符串都是值传递
+牛客网check
 '''
 def isNumeric(string):
     if string == '':
@@ -296,6 +299,7 @@ def isInteger(string):
 面试题21：调整数组顺序使奇数位于偶数前面
 题目：输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分
 可扩展的解法（isOdd）
+牛客网check（不改变子集的顺序）
 '''
 def Reorder(arr):
     if len(arr) <= 1:
@@ -316,6 +320,23 @@ def Reorder(arr):
             arr[p2] = temp
     return arr
 
+from collections import deque
+# 不改变子集的顺序（空间复杂度）
+def Reorder2(arr):
+    if len(arr) <= 1:
+        return arr
+
+    # 要放后面的从前往后append
+    # 要放前面的从后往前appendleft
+    new_arr = deque()
+    for i in range(len(arr)):
+        if not isOdd(arr[i]):
+            new_arr.append(arr[i])
+        if isOdd(arr[len(arr) - i - 1]):
+            new_arr.appendleft(arr[len(arr) - i - 1])
+    return list(new_arr)
+
+
 def isOdd(num):
     return num & 0x1
 
@@ -327,11 +348,12 @@ def isNegative(num):
 def isDividedBy3(num):
     return (num % 3 == 0)
 
-# print(Reorder([1,3,5,2,4,6]))
-# print(Reorder([2,4,6,1,3,5]))
-# print(Reorder([1,3,5]))
-# print(Reorder([2,4,6]))
-# print(Reorder([]))
+print(Reorder2([1,3,5,2,4,6]))
+print(Reorder2([1,2,3,4,5,6,7]))
+print(Reorder2([2,4,6,1,3,5]))
+print(Reorder2([1,3,5]))
+print(Reorder2([2,4,6]))
+print(Reorder2([]))
 
 
 '''
@@ -466,3 +488,24 @@ one.next, two.next, three.next = two, three, four
 one_r = ReverseList(one)
 four_r = ReverseList(four)
 
+
+'''
+面试题25：合并两个排序的链表
+题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然使递增排序的。
+牛客网check
+'''
+def Merge(pHead1, pHead2):
+    if pHead1 == None:
+        return pHead2
+    elif pHead2 == None:
+        return pHead1
+    
+    if pHead1.value < pHead2.value:
+        pMergeHead = pHead1
+        pMergeHead.next = Merge(pHead1.next, pHead2)
+    else:
+        pMergeHead = pHead2
+        pMergeHead.next = Merge(pHead2.next, pHead1)
+    return pMergeHead
+
+        
