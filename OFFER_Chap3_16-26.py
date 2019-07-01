@@ -3,6 +3,12 @@ class LinkNode(object):
         self.value = value
         self.next = None
 
+class TreeNode(object):
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
 '''
 面试题16：数值的整数次方
 题目：实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
@@ -507,5 +513,49 @@ def Merge(pHead1, pHead2):
         pMergeHead = pHead2
         pMergeHead.next = Merge(pHead2.next, pHead1)
     return pMergeHead
+
+
+
+'''
+面试题26：树的子结构
+题目：输入两棵二叉树A和B，判断B是不是A的子结构。
+牛客网check
+'''
+def HasSubtree(pRoot1, pRoot2):
+    result = False
+
+    if (pRoot1 is not None and pRoot2 is not None):
+
+        result = DoesTree1HasTree2(pRoot1, pRoot2)
+
+        if not result:
+            result = HasSubtree(pRoot1.left, pRoot2)
+        if not result:
+            result = HasSubtree(pRoot1.right, pRoot2)
+    
+    return result
+
+
+def DoesTree1HasTree2(pRoot1, pRoot2):
+    if pRoot2 is None:
+        return True
+    if pRoot1 is None:
+        return False
+    
+    if not Equal(pRoot1.value, pRoot2.value):
+        return False
+    
+    return DoesTree1HasTree2(pRoot1.left, pRoot2.left) and \
+           DoesTree1HasTree2(pRoot1.right, pRoot2.right)
+
+def Equal(num1, num2):
+    if abs(num1 - num2) < 1e-8:
+        return True
+    else:
+        return False
+
+
+
+
 
         
