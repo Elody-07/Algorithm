@@ -299,15 +299,81 @@ def PrintTreeMultiLines(pTree):
             toBePrinted = nextLevel
             nextLevel = 0
 
-a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
-a.right, b.right= b, c
-PrintTreeMultiLines(a)
+# a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
+# a.right, b.right= b, c
+# PrintTreeMultiLines(a)
 
 
 '''
 题目三：之字形打印二叉树
+第一行从左到右，第二行从右到左，以此类推。
 '''
 def PrintTreeShapeZ(pTree):
-    pass
+    if pTree is None:
+        return None 
+    stack1 = []
+    stack2 = []
+    order = 1 # 1时先存左子节点再右子节点，0时反之
+    stack1.append(pTree)
+    while(stack1 != [] or stack2 != []):
+        if order:
+            pNode = stack1.pop()
+            print(pNode.val, end=' ')
+            if pNode.left is not None:
+                stack2.append(pNode.left)
+            if pNode.right is not None:
+                stack2.append(pNode.right)
+            if stack1 == []:
+                print('\n')
+                order = 1 - order
+        else:
+            pNode = stack2.pop()
+            print(pNode.val, end=' ')
+            if pNode.right is not None:
+                stack1.append(pNode.right)
+            if pNode.left is not None:
+                stack1.append(pNode.left)
+            if stack2 == []:
+                print('\n')
+                order = 1 - order
 
     
+# a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
+# a.left, b.left  = b, d
+# a.right, b.right = c, e
+# PrintTreeShapeZ(a)
+
+
+    
+
+'''
+面试题33：二叉搜索树的后序遍历序列
+题目：输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。是则返回True，否则返回False。假设输入数组的任意两个数字都互不相同。
+牛客网check
+'''
+def VerifySquenceOfBST(arr):
+    n = len(arr)
+    if n == 0:
+        return False
+    
+    root = arr[-1]
+    for i in range(n):
+        if arr[i] > root:
+            break
+    for j in range(i, n):
+        if arr[j] < root:
+            return False
+
+    left = True
+    if i > 0:
+        left = VerifySquenceOfBST(arr[:i])
+
+    right = True
+    if i < n - 1:
+        right = VerifySquenceOfBST(arr[i:(n-1)])
+    
+    return (left and right)
+            
+print(VerifySquenceOfBST([4,8,6,12,16,14,10]))            
+print(VerifySquenceOfBST([4,6,7,5]))            
+
