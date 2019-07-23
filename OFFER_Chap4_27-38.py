@@ -374,6 +374,380 @@ def VerifySquenceOfBST(arr):
     
     return (left and right)
             
-print(VerifySquenceOfBST([4,8,6,12,16,14,10]))            
-print(VerifySquenceOfBST([4,6,7,5]))            
+# print(VerifySquenceOfBST([4,8,6,12,16,14,10]))            
+# print(VerifySquenceOfBST([4,6,7,5]))            
+
+
+
+'''
+面试题34：二叉树中和为某一值的路径
+题目：输入一棵二叉树和整数，打印出二叉树中节点值的和为输入整数的所有路径。从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
+牛客网check
+'''
+from copy import deepcopy
+def FindPath(pTree, num):
+    if pTree is None:
+        return [] 
+    
+    curSum = 0
+    curPath = []
+    res = []
+    FindPathCore(pTree, num, curSum, curPath, res)
+    return res
+
+def FindPathCore(pNode, num, curSum, curPath, res):
+    curSum += pNode.val
+    curPath.append(pNode.val)
+
+    isleaf = pNode.left is None and pNode.right is None
+    if isleaf and curSum == num:
+        res.append(deepcopy(curPath))
+
+    if pNode.left is not None:
+        FindPathCore(pNode.left, num, curSum, curPath, res)
+    if pNode.right is not None:
+        FindPathCore(pNode.right , num, curSum, curPath, res)
+
+    curPath.pop()
+    curSum -= pNode.val
+
+
+# a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
+# a.left, b.left  = b, d
+# a.right, b.right = c, e
+# print(FindPath(a, 1))
+
+
+
+'''
+面试题35：复杂链表的复制
+题目：请实现函数复制一个复杂链表。在复杂链表中，每个节点除了有一个pNext指针指向下一个节点，还有一个pSibling指针指向链表中的任意节点或者None。复杂链表节点的定义如下：
+牛客网check(2种方法)
+'''
+class ComplexLinkNode(object):
+    def __init__(self, x):
+        self.label = x 
+        self.next = None
+        self.random = None
+    
+def CloneHash(pTree):
+    if pTree is None:
+        return None
+
+    hash = {}
+    pNode = pTree
+
+    while(pNode is not None):
+        pClone = ComplexLinkNode(pNode.label)
+        hash[pNode] = pClone
+        pNode = pNode.next
+    
+    for k, k_clone in hash.items():
+        if k.next is not None:
+            k_clone.next = hash[k.next]
+        if k.random is not None:
+            k_clone.random = hash[k.random]
+    
+    return hash[pTree]
+
+# node1, node2, node3, node4 = ComplexLinkNode(1), ComplexLinkNode(2), ComplexLinkNode(3), ComplexLinkNode(4)
+# node1.next, node2.next, node3.next = node2, node3, node4
+# pCloned = CloneHash(node1)
+# print(pCloned.label)
+
+def Clone(pTree):
+    if pTree is None:
+        return None
+
+    CloneNodes(pTree)
+    CloneSiblingNodes(pTree)
+    return Reconstruct(pTree)
+
+def CloneNodes(pTree):
+    pNode = pTree
+    while(pNode is not None):
+        pClone = ComplexLinkNode(pNode.label)
+        pClone.next = pNode.next
+        pNode.next = pClone
+        pNode = pClone.next
+
+def CloneSiblingNodes(pTree):
+    pNode = pTree
+    while(pNode is not None):
+        if pNode.random is not None:
+            pNode.next.random = pNode.random.next
+        pNode = pNode.next.next
+
+def Reconstruct(pTree):
+    pClonedHead = pTree.next
+    pTree.next = pClonedHead.next
+
+    pClonedNode = pClonedHead
+    pNode = pClonedNode.next
+
+    while(pNode is not None):
+        pClonedNode.next = pNode.next
+        pClonedNode = pClonedNode.next
+        pNode.next = pClonedNode.next
+        pNode = pNode.next
+    
+    return pClonedHead
+
+
+# node1, node2, node3, node4 = ComplexLinkNode(1), ComplexLinkNode(2), ComplexLinkNode(3), ComplexLinkNode(4)
+# node1.next, node2.next, node3.next = node2, node3, node4
+# pCloned = Clone(node1)
+# print(pCloned.label)
+
+
+
+'''
+面试题36：二叉搜索树与双向链表
+题目：输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+'''
+def Convert(pHeadOfTree):
+    if pHeadOfTree is None:
+        return None
+
+    pLastNodeInList = ConvertNode(pHeadOfTree, None)
+
+    # 找到双向链表的头
+    pHeadOfList = pLastNodeInList
+    while(pHeadOfList is not None and pHeadOfList.left is not None):
+        pHeadOfList = pHeadOfList.left
+    print(pHeadOfList is pLastNodeInList)
+    
+    return pHeadOfList 
+
+def ConvertNode(pNode, pLastNodeInList):
+    if pNode is None:
+        return 
+    
+    if pNode.left is not None:
+        pLastNodeInList = ConvertNode(pNode.left, pLastNodeInList)
+    
+    pNode.left = pLastNodeInList
+    if pLastNodeInList is not None:
+        pLastNodeInList.right = pNode
+    
+    pLastNodeInList = pNode
+    if pNode.right is not None:
+        pLastNodeInList = ConvertNode(pNode.right, pLastNodeInList)
+
+    return pLastNodeInList
+    
+# a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
+# a.left, b.left  = b, d
+# a.right, b.right = c, e
+# DoubleLink = Convert(a)
+
+    
+
+
+'''
+面试题37：序列化二叉树
+题目：请实现两个函数，分别用来序列化和反序列化二叉树。
+'''
+def Serialize(pRoot):
+    res = ''
+    if pRoot is None:
+        res += '$,'
+        return res
+
+    res = res + str(pRoot.val) + ','
+    res += Serialize(pRoot.left)
+    res += Serialize(pRoot.right)
+
+    return res
+
+def Deserialize(s):
+    if isinstance(s, str):
+        s = s.split(',')
+
+    if s == [] :
+        return None
+    if s[0] == '$':
+        s.pop(0)
+        return None
+
+    pRoot = TreeNode(int(s[0]))
+    s.pop(0)
+    pRoot.left = Deserialize(s)
+    pRoot.right = Deserialize(s)
+
+    return pRoot
+
+
+# a, b, c, d, e = TreeNode(1), TreeNode(2), TreeNode(3), TreeNode(4), TreeNode(5)
+# a.left, b.left  = b, d
+# a.right, b.right = c, e
+# print(Serialize(a))
+# root = Deserialize(Serialize(a))
+# print(root.val)
+
+
+'''
+面试题38：字符串的排列
+题目：输入一个字符串，打印出该字符串中字符的所有排列。例如，输入字符串abc，则打印出由字符a，b，c所能排列出来的所有字符串abc、acb、bac、bca、cab和cba。
+'''
+def Permutation(s):
+    if isinstance(s, str):
+        s = list(s)
+    if len(s) == 0 or len(s) == 1:
+        return s
+    res = []
+    Permutation_core(s, 0, res) 
+    return res
+
+def Permutation_core(s, begin, res):
+    if begin == len(s) - 1:
+        string = ''.join(s)
+        if string not in res:
+            res.append(string)
+        return 
+        
+    for i in range(begin, len(s)):
+        temp = s[begin]
+        s[begin] = s[i]
+        s[i] = temp
+        Permutation_core(s, begin+1, res)
+        temp = s[begin]
+        s[begin] = s[i]
+        s[i] = temp
+    return 
+        
+# print(Permutation('aab'))
+
+
+'''
+扩展：求字符的所有组合。如字符abc，它们的组合有a、b、c、ab、ac、bc、abc。
+'''
+def Combination(s):
+    if s == '':
+        return []
+    
+    res = []
+    for i in range(1, len(s)+1):
+        Combination_core(s, '', i, 0, res)
+    return res
+
+def Combination_core(s, word, length, begin, res):
+    if len(word) == length:
+        res.append(word)
+        return
+
+    for i in range(begin, len(s)):
+        word += s[i]
+        Combination_core(s, word, length, i+1, res)
+        word = word.strip(s[i]) # 回溯
+        
+# print(Combination('abc'))
+
+
+
+'''
+扩展：输入一个含有8个数字的数组，判断有没有可能把这8个数字分别放到正方体的8个顶点上，使得正方体上三组相对的面上的4个顶点的和都相等。
+'''
+from copy import copy
+def Square(arr):
+    if len(arr) != 8 :
+        return []
+    
+    res = []
+    Square_core(arr, 0, res)
+    return res
+
+def Square_core(arr, begin, res):
+    if begin == len(arr) - 1:
+        if arr[0]+arr[1]+arr[2]+arr[3]==arr[4]+arr[5]+arr[6]+arr[7] \
+           and arr[0]+arr[1]+arr[4]+arr[5]==arr[2]+arr[3]+arr[6]+arr[7] \
+           and arr[0]+arr[3]+arr[4]+arr[7]==arr[1]+arr[2]+arr[5]+arr[6] :
+           if arr not in res:
+                res.append(copy(arr)) # 注意copy
+        return 
+
+    for i in range(begin, len(arr)):
+        temp = arr[begin]
+        arr[begin] = arr[i]
+        arr[i] = temp
+        Square_core(arr, begin+1, res)
+        temp = arr[begin]
+        arr[begin] = arr[i]
+        arr[i] = temp
+    
+
+print(Square([1,1,1,1,1,1,1,1]))
+print(Square([1,1,1,1,2,2,2,2]))
+
+
+'''
+扩展：八皇后。n*n的国际象棋上摆放n个皇后，使其不在同一行、同一列或同一对角线。
+'''
+# 解法一：回溯法，逐个确定皇后的位置
+def queen(n):
+    if n <= 0:
+        return []
+    res = []
+    arr = [None] * n
+    queen_core(n, arr, 0, res)
+    return res
+
+def queen_core(n, arr, col, res):
+    if col == n:
+        res.append(copy(arr))
+        return
+    for row in range(n):
+        arr[col] = row
+        flag = True
+        for i in range(col):
+            if arr[i] == row or abs(arr[i] - arr[col]) == col - i:
+                flag = False
+                break
+        if flag:
+            queen_core(n, arr, col+1, res)
+
+print(queen(3))
+print(queen(4))
+print(len(queen(8)))
+
+# 解法二：全排列，将满足条件的排列方式保存下来
+def queen_2(n):
+    if n <= 0:
+        return []
+
+    arr = list(range(n))
+    res = []
+    queen_2_core(arr, 0, res)
+    return res
+
+def queen_2_core(arr, begin, res):
+    n = len(arr)
+    if begin == n - 1:
+        flag = True
+        for i in range(len(arr)):
+            for j in range(i+1, len(arr)):
+                if abs(arr[i] - arr[j]) == abs(i-j):
+                    flag = False
+                    break
+        if flag:
+            res.append(copy(arr))
+        return
+
+    for i in range(begin, n):
+        temp = arr[i]
+        arr[i] = arr[begin]
+        arr[begin] = temp
+        queen_2_core(arr, begin+1, res)
+        temp = arr[i]
+        arr[i] = arr[begin]
+        arr[begin] = temp
+
+print(queen_2(3))
+print(queen_2(4))
+print(len(queen_2(8)))
+
+
+
+
+
 
