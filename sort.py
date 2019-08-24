@@ -74,25 +74,17 @@ def BetterBubbleSort(arr):
 # print(BetterBubbleSort(arr5))
                             
 
-import random
-def Partition(arr):
-    start = 0
-    end = len(arr) - 1
-    center_idx = random.randint(start, end)
-
-    center = arr[center_idx] # 将轴值放在数组第一个
-    arr[center_idx] = arr[start]
-    arr[start] = center 
-
+import randomdef Partition(arr, start, end):
+    center = arr[start]
     while(start < end):
-        while arr[end] >= center:
+        while arr[end] >= center and start < end:
             end -= 1
         arr[start] = arr[end]
-        while arr[start] <= center:
+        while arr[start] < center and start < end:
             start += 1
         arr[end] = arr[start]
-    assert start==end 
-    arr[start] = arr[0]
+    assert start == end
+    arr[start] = center
     return start
 
 def QuickSort(arr):
