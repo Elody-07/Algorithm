@@ -436,7 +436,7 @@ def LeftRotateString1(string, n):
         return string
     tail = string[:n]
     return string[n:] + tail
-print(LeftRotateString('abcdefg', 2))
+# print(LeftRotateString('abcdefg', 2))
 
 
 def LeftRotateString2(string, n):
@@ -451,3 +451,399 @@ def LeftRotateString2(string, n):
     return ''.join(string)
 
         
+
+'''
+面试题59：队列的最大值。
+题目一：滑动窗口的最大值。
+给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}。
+'''
+def maxInWindow(arr, k):
+    if arr == [] or k <= 0 or k > len(arr):
+        return []
+    
+    index = []
+    res = []
+    for i in range(0, k):
+        while(index != [] and arr[i] >= arr[index[-1]]):
+            index.pop(-1)
+        index.append(i)
+    
+    for i in range(k, len(arr)):
+        res.append(arr[index[0]])
+        while(index != [] and arr[i] >= arr[index[-1]]):
+            index.pop(-1)
+        while index != [] and (i - index[0] >= k):
+            index.pop(0)
+        index.append(i)
+    
+    res.append(arr[index[0]])
+    return res
+
+# print(maxInWindow([2,3,4,2,6,2,5,1], 8))
+# print(maxInWindow([2,3,4,5,6], 3))
+# print(maxInWindow([2,3,4,5,6], 1))
+# print(maxInWindow([6,5,4,3,2], 3))
+# print(maxInWindow([6,5,4,3,2], 1))
+# print(maxInWindow([1,1,1,1,1,1], 3))
+
+
+'''
+题目二：队列的最大值。
+请定义一个队列并实现函数max得到队列里的最大值，要求max、push_back、pop_front的时间复杂度都是O(1)。
+'''
+class queue(object):
+    def __init__(self):
+        self.maximums = []
+        self.data = []
+        self.currentIdx = 0
+    
+    def push(self, val):
+        while(self.maximums != [] and val >= self.maximums[-1][0]):
+            self.maximums.pop(-1)
+        internalData = (val, self.currentIdx)
+        self.data.append(internalData)
+        self.maximums.append(internalData)
+        self.currentIdx += 1
+    
+    def pop(self):
+        if self.maximums == []:
+            return None
+        
+        if self.maximums[0][1] == self.data[0][1]:
+            self.maximums.pop(0)
+        
+        self.data.pop(0)
+    
+    def max(self):
+        if self.maximums == []:
+            return None
+        return self.maximums[0][0]
+
+# Q = queue()
+# Q.push(4)
+# print(Q.data)
+# print(Q.maximums)
+# print(Q.max())
+
+# Q.push(3)
+# print(Q.data)
+# print(Q.maximums)
+# print(Q.max())
+
+# Q.push(2)
+# print(Q.data)
+# print(Q.maximums)
+# print(Q.max())
+
+# Q.push(6)
+# print(Q.data)
+# print(Q.maximums)
+# print(Q.max())
+
+# Q.push(2)
+# print(Q.data)
+# print(Q.maximums)
+# print(Q.max())
+
+
+'''
+面试题60：n个骰子的点数
+题目：把n个骰子投在地上，所有骰子朝上一面的点数之和为s。输入n，打印出s的所有可能的值出现的概率。
+'''
+# 递归，效率低
+def printProb1(num, s):
+    if num <= 0 or s < num or s > 6*num:
+        return 0
+    
+    counts = [0] * (6*num - num + 1)
+    for i in range(1, 7):
+        printProb_core(num, num, i, counts)
+    
+    total = 6 ** num
+    return counts[s-num] / float(total)
+    
+def printProb_core(ori, cur, sum, counts):
+    if cur == 1:
+        counts[sum - ori] += 1
+    else:
+        for i in range(1, 7):
+            printProb_core(ori, cur-1, sum+i, counts)
+
+# print('%.3f' % printProb(2,2))
+# print('%.3f' % printProb(2,3))
+
+
+def printProb2(num, s):
+    if num <= 0 or s < num or s > 6 * num:
+        return 0
+    
+    probs = [None] * 2
+    # 不能连在一起写
+    probs[0] = [0] * (6 * num + 1)
+    probs[1] = [0] * (6 * num + 1)
+    flag = 0
+
+    for i in range(1, 7):
+        probs[flag][i] = 1
+    
+    for k in range(2, num+1):
+        for i in range(0, k):
+            probs[1-flag][i] = 0
+
+        for i in range(k, 6 * k + 1):
+            probs[1-flag][i] = 0
+            j = 1
+            while(j <= i and j <= 6):
+                probs[1-flag][i] += probs[flag][i-j]
+                j += 1
+
+        flag = 1 - flag
+    
+    total = float(6 ** num)
+    print(probs[flag])
+    return probs[flag][s] / total
+
+# print('%.3f' % printProb2(5,6))
+
+
+
+'''
+面试题61：扑克牌中的顺子
+题目：从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2~10位数字本身，A为1，J为11，Q为12，K为13，而大小王可以看成任意数字。
+'''
+def IsContinuous(arr):
+    if len(arr) < 5:
+        return False
+    arr = sorted(arr)
+
+    numOfZero = 0
+    for i in range(0, len(arr)):
+        if arr[i] == 0:
+            numOfZero += 1
+        else:
+            break
+
+    small = numOfZero
+    big = small + 1
+    numOfGap = 0
+    while(big < len(arr)):
+        if arr[small] == arr[big]:
+            return False
+        else:
+            numOfGap += (arr[big] - arr[small] - 1)
+        small += 1
+        big += 1
+    
+    return True if numOfGap <= numOfZero else False
+
+# print(IsContinuous([1,2,3,4,5]))
+# print(IsContinuous([1,0,3,0,5]))
+# print(IsContinuous([1,1,3,0,5]))
+
+
+'''
+面试题62：圆圈中最后剩下的数字
+题目：0,1,2,...,n-1这n个数字排成一个圆圈，从数字0开始，每次从这个圆圈里删除第m个数字。求出这个圆圈里剩下的最后一个数字。
+牛客网check（2种）
+'''
+# 用list代替环形链表
+def LastRemaining1(n, m):
+    if n <= 0 or m <= 0:
+        return None 
+    
+    arr = list(range(n))
+    curIdx = 0
+    while(len(arr) > 1):
+        for i in range(m-1):
+            if curIdx == len(arr) - 1:
+                curIdx = 0
+            else:
+                curIdx += 1
+        if curIdx == len(arr) - 1:
+            arr.pop(curIdx)
+            curIdx = 0
+        else:
+            arr.pop(curIdx)
+    return arr[0]
+
+# print(LastRemaining1(5, 3))
+
+def LastRemaining2(n, m):
+    if n < 1 or m < 1:
+        return -1
+    
+    last = 0
+    for i in range(2, n+1):
+        last = (last + m) % i
+    
+    return last
+
+
+'''
+面试题63：股票的最大利润
+题目：假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？例如，一只股票在某些时间节点的价格为[9,11,8,5,7,12,16,14]。如果我们能在价格为5时买进，价格为16时卖出，则能收获最大利润11。
+'''
+def MaxDiff(arr):
+    if len(arr) < 2:
+        return 0
+    min = arr[0]
+    maxDiff = arr[1] - min
+    for i in range(2, len(arr)):
+        if arr[i-1] < min:
+            min = arr[i-1]
+        curDiff = arr[i] - min
+        if curDiff > maxDiff:
+            maxDiff = curDiff
+    
+    return maxDiff
+
+# print(MaxDiff([9,11,8,5,7,12,16,14]))
+# print(MaxDiff([9,10,11,12]))
+# print(MaxDiff([12,11,10,9]))
+# print(MaxDiff([9,10]))
+
+        
+
+    
+
+'''
+面试题65：不用加减乘除做加法
+题目：写一个函数，求两个整数之和，要求不能使用加减乘除四则运算符号。
+'''
+def NewAdd(num1, num2):
+    while num2 != 0:
+        sum = num1 ^ num2
+        carry = (num1 & num2) << 1
+        num1 = sum
+        num2 = carry
+    
+    return sum
+
+def Add(self, num1, num2):
+        if not num1:
+            return num2
+        if not num2:
+            return num1
+        while num2!=0:
+            num1,num2=(num1^num2)& 0xFFFFFFFF,(num1&num2)<<1
+        return num1 if num1 >> 31 == 0 else num1 - 2**32
+
+# print(NewAdd(35,99))
+
+
+'''
+面试题66：构建乘积数组
+题目：给定一个数组A[0,1,2,...,n-1]，请构建一个数组B[0,1,2,...,n-1]，其中B中的元素B[i]=A[0]×A[1]×...×A[i-1]×A[i+1]×...×A[n-1]。不能使用除法。
+'''
+def multiply(A):
+    if A == []:
+        return []
+    
+    n = len(A)
+    B = [None] * n
+    C = [None] * n
+    D = [None] * n
+    for i in range(0, n):
+        if i == 0:
+            C[i] = 1
+            D[n-1-i] = 1
+        else:
+            C[i] = A[i-1] * C[i-1]
+            D[n-1-i] = A[n-i] * D[n-i] 
+    
+    return [x * y for x,y in zip(C,D)]
+
+# print(multiply([1,2,3,4]))
+
+
+
+'''
+面试题66：将字符串转换成整数
+不符合数字要求时返回0
+'''
+def StrToInt(s):
+    if s == '' or s == None or s == '+' or s == '-':
+        return 0
+    
+    minus = 1
+    if s[0] == '-':
+        minus = -1 
+        s = s[1:]
+    if s[0] == '+':
+        s = s[1:]
+        
+    num = 0
+    for word in s:
+        if word > '0' and word < '9':
+            num = num * 10 + minus * (ord(word)-ord('0'))
+        else:
+            num = 0
+            break
+    return num if num < 2**32-1 and num > -1*(2**32-1) else 0
+    
+# print(StrToInt('123'))
+
+
+'''
+面试题68：树中两个节点的最低公共祖先
+题目一：树是二叉搜索树
+题目二：普通树（不一定是二叉树）但是有指向父节点的指针
+题目三：普通树，没有父指针
+'''
+# 题目三
+def GetLastParent(pTree, node1, node2):
+    if pTree is None or node1 is None or node2 is None:
+        return None
+    
+    path1 = []
+    path2 = []
+    GetPath(pTree, node1, path1)
+    GetPath(pTree, node2, path2)
+
+    if path1 == [] or path2 == []:
+        return None
+    
+    diff = len(path1) - len(path2)
+    if diff > 0:
+        long = path1
+        short = path2
+    else:
+        long = path2
+        short = path1
+    for i in range(abs(diff)):
+        long.pop()
+    
+    while(long != [] and short != [] and long[-1] != short[-1]):
+        long.pop()
+        short.pop()
+    
+    if long[-1] == short[-1]:
+        return long[-1]
+    else:
+        return None
+
+
+
+    return None
+
+def GetPath(pTree, node, path):
+    if pTree == node:
+        path.append(node)
+        return True
+    
+    found = False
+    path.append(pTree)
+    if not found and pTree.left is not None:
+        found = GetPath(pTree.left, node, path)
+    if not found and pTree.right is not None:
+        found = GetPath(pTree.right, node, path)
+    
+    if not found:
+        path.pop()
+    
+    return found
+    
+# a, b, c, d, e, f, g = TreeNode(8), TreeNode(6), TreeNode(10), TreeNode(5), TreeNode(7), TreeNode(9), TreeNode(11) 
+# a.left, a.right, b.left, b.right, d.left  = b, None, d, None, e
+# print(GetLastParent(a, d, e).val)
+    
