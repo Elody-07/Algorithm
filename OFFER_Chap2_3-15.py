@@ -488,6 +488,9 @@ def find(arr, rows, cols, row, col, str, visited):
                   find(arr, rows, cols, row, col+1, str[1:], visited) or \
                   find(arr, rows, cols, row-1, col, str[1:], visited) or \
                   find(arr, rows, cols, row+1, col, str[1:], visited)
+        
+        if not flag:
+            visited[row * cols + col] = 0
     
     return flag 
 
