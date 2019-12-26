@@ -623,7 +623,7 @@ def maxProductAfterCutting2(length):
 def BinaryOne(num):
     count = 0
     if num < 0:
-        num = num & (0xffffffff)
+        num = num & (0xffffffff) # 求补码
     # print("num:", bin(num))
     while (num):
         count += 1

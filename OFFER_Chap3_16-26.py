@@ -22,12 +22,11 @@ def Power(base, exponent):
     else:
         InvalidInput = False
 
+    flag = 1
     if exponent < 0:
-        absexponent = -exponent
-    else:
-        absexponent = exponent
+        flag = -1
     
-    result = PowerWithUnsignedExponent(base, absexponent)
+    result = PowerWithUnsignedExponent(base, flag * exponent)
     if exponent < 0:
         return 1. / result 
     else:
@@ -44,8 +43,6 @@ def Power(base, exponent):
 def PowerWithUnsignedExponent(base, exponent):
     if exponent == 0:
         return 1
-    if exponent == 1:
-        return base 
     
     res = PowerWithUnsignedExponent(base, exponent >> 1)
     res *= res 
@@ -104,18 +101,15 @@ def Increment(num):
     return False
 
 # 打印num数组代表的数字，不打印高位无意义的0
-def PrintNumber(num):
-    isBeginning0 = True
-    for i in range(0, len(num)):
-        if isBeginning0 and num[i] != 0:
-            isBeginning0 = False
-        
-        if not isBeginning0:
-            print('%d' % num[i], end='')
+def PrintNumber(arr):
+    if arr == []:
+        return None
     
-    if not isBeginning0: # 防止递归方法中多打印一行空行
-        print('')
-
+    for i in range(len(arr)):
+        if arr[i] != 0:
+            break
+    
+    print(''.join(str(x) for x in arr[i:]))
 
 # 递归
 def PrintNumsContinuously_2(n):
@@ -145,6 +139,7 @@ def PrintNumsCore(num, index):
 题目一：在O(1)的时间内删除链表节点。
 给定单向链表的头指针和一个节点指针，定义一个函数在O(1)时间内删除该节点。链表节点与函数的定义如下：
 '''
+# 注：确保节点在链表中
 def DeleteNode(pHead, pToBeDeleted):
 
     if (pHead is None or pToBeDeleted is None):
@@ -174,7 +169,7 @@ def DeleteNode(pHead, pToBeDeleted):
 # b = LinkNode(2)
 # c = LinkNode(3)
 # d = LinkNode(4)
-# a.next, b.next = b, c
+# a.next, b.next, c.next = b, c, d
 # print(DeleteNode(a, a.next))
 # print(DeleteNode(a, a.next))
 # print(DeleteNode(a, d))
